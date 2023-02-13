@@ -1,4 +1,4 @@
-namespace ctbibl.api;
+namespace AcctIbl.Api;
 
 public class WeatherForecast
 {

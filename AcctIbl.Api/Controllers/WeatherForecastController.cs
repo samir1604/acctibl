@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace ctbibl.api.Controllers;
+namespace AcctIbl.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
