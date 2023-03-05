@@ -7,22 +7,19 @@ public abstract class ValueObject : IEquatable<ValueObject>
 
     public bool Equals(ValueObject? other)
     {
-        if(other == null || other.GetType() !=  GetType())
+        if(other is null || other.GetType() != GetType())
             return false;
 
         var thisValues = GetAtomicValues().GetEnumerator();
         var otherValues = other.GetAtomicValues().GetEnumerator();
 
-        while(thisValues!.MoveNext() && otherValues!.MoveNext())
+        while(thisValues?.MoveNext() == true && otherValues?.MoveNext() == true)
         {
-            if(thisValues?.Current != null &&
-                !thisValues.Current.Equals(otherValues.Current))
-                {
-                    return false;
-                }
+            if(thisValues.Current?.Equals(otherValues.Current) == false)
+                return false;
         }
 
-        return !thisValues.MoveNext() && !otherValues.MoveNext();
+        return thisValues?.MoveNext() == false && otherValues?.MoveNext() == false;
     }
 
     public override bool Equals(object? obj)
@@ -39,7 +36,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
 
     public static bool operator ==(ValueObject? left, ValueObject? right)
     {
-        return left != null && left.Equals(right);
+        return left?.Equals(right) ?? false;
     }
 
     public static bool operator !=(ValueObject? left, ValueObject? right)
