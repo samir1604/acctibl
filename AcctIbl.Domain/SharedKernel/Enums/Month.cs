@@ -1,5 +1,5 @@
 namespace AcctIbl.Domain.SharedKernel.Enums;
-enum Month {
+public enum Month {
     January,
     February,
     March,
