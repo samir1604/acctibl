@@ -26,11 +26,9 @@ public class Member : Entity<Guid>
     {
         var idx = _tithes.FindIndex(t => t.Equals(tithe));
         if (idx >= 0)
-            return Result.Failure<Tithe>(tithe, DomainErrors.Members.AddingNewTithe);
+            return Result.Failure(tithe, DomainErrors.Members.AddingNewTithe);
 
         _tithes.Add(tithe);
-        DateModified = DateTime.Now;
-
         return tithe;
     }
 
@@ -38,7 +36,7 @@ public class Member : Entity<Guid>
     {
         var idx = _tithes.FindIndex(t => t.Equals(tithe));
         if (idx < 0)
-            return Result.Failure<Tithe>(tithe, DomainErrors.Members.EditingTithe);
+            return Result.Failure(tithe, DomainErrors.Members.EditingTithe);
 
         var currentTithe = _tithes[idx];
         var updatedTithe = Tithe.Create(currentTithe.Month, tithe.Amount + tithe.Amount);
@@ -50,5 +48,6 @@ public class Member : Entity<Guid>
     public void ChangeProfileData(string? firstName, string? lastName, string? phone)
     {
         Info = Info.CopyWith(firstName, lastName, phone);
+        DateModified = DateTime.Now;
     }
 }
