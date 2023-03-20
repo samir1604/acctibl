@@ -23,19 +23,19 @@ public class Result
 
     public Error Error { get; init; }
 
-    public static Result<T> Create<T>(T? value) {
-        if (value == null)
-        {
-            return new Result<T>(value, true, Error.NullValue );
-        }
-        return new(value, true, Error.None);
+    public static Result<T> Create<T>(T? value)
+    {
+        return value is null ?  Failure<T>(Error.NullValue) :
+            Success(value);
     }
 
     public static Result Success() => new(true, Error.None);
 
     public static Result<T> Success<T>(T value) => new(value, true, Error.None);
 
-    public static Result Failure() => new(false, Error.NullValue);
+    public static Result Failure(Error error) => new(false, error);
 
-    public static Result<T> Failure<T>(T? value, Error error) => new(value, false, error);
+    public static Result<T> Failure<T>(Error error) => new(default, false, error);
+
+    //public static Result<T> Failure<T>(T? value, Error error) => new(value, false, error);
 }

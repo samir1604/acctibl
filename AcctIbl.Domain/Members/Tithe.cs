@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System;
-using AcctIbl.Domain.SharedKernel;
+﻿using AcctIbl.Domain.SharedKernel;
 using AcctIbl.Domain.SharedKernel.Enums;
 
 namespace AcctIbl.Domain.Members;
@@ -11,7 +9,6 @@ public sealed class Tithe : ValueObject
     {
         Month = month;
         Amount = amount;
-
         DateCreated = DateTime.Now;
     }
 
@@ -21,12 +18,7 @@ public sealed class Tithe : ValueObject
 
     public static Tithe Create(Month month, double amount)
     {
-        if (amount <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(amount));
-        }
-
-        return new Tithe(month, amount);
+        return new(month, amount);
     }
 
     protected override IEnumerable<object> GetAtomicValues()

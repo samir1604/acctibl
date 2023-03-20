@@ -1,17 +1,15 @@
-using System.Collections.Generic;
-
-using AcctIbl.Domain.Errors;
 using AcctIbl.Domain.SharedKernel;
-using AcctIbl.Domain.SharedKernel.Response;
+using AcctIbl.Domain.Members.ValueObjects;
 
 namespace AcctIbl.Domain.Members;
 
-public class Member : Entity<Guid>
+public class Member : AggregateRoot<MemberId>
 {
     private readonly List<Tithe> _tithes = new();
-    public Member(Guid? guid, string firstName, string lastName, string phone) : base(guid ?? Guid.NewGuid())
+    public Member(MemberId id, string firstName, string lastName, string phone) :
+        base(id)
     {
-        Info = new BasicInfo(firstName, lastName, phone);
+        Info = BasicInfo.Create(firstName, lastName, phone);
         DateCreated = DateTime.Now;
         DateModified = DateTime.Now;
     }
@@ -22,32 +20,33 @@ public class Member : Entity<Guid>
 
     public IReadOnlyCollection<Tithe> Tithes => _tithes.AsReadOnly();
 
-    public Result<Tithe> AddUpdateTithe(Tithe tithe)
+    public void AddNewTithe(Tithe tithe)
     {
-        var idx = _tithes.FindIndex(t => t.Equals(tithe));
-        if (idx >= 0)
-            return Result.Failure(tithe, DomainErrors.Members.AddingNewTithe);
-
         _tithes.Add(tithe);
-        return tithe;
     }
 
-    public Result<Tithe> UpdateTithe(Tithe tithe)
+    public void UpdateAmountTithe(Tithe tithe, double newAmount)
     {
         var idx = _tithes.FindIndex(t => t.Equals(tithe));
-        if (idx < 0)
-            return Result.Failure(tithe, DomainErrors.Members.EditingTithe);
 
-        var currentTithe = _tithes[idx];
-        var updatedTithe = Tithe.Create(currentTithe.Month, tithe.Amount + tithe.Amount);
-        _tithes[idx]= updatedTithe;
+        if (idx > 0)
+            _tithes[idx] = Tithe.Create(tithe.Month, newAmount);
+    }
 
-        return updatedTithe;
+    public void RemoveTithe(Tithe tithe)
+    {
+        var idx = _tithes.FindIndex(t => t.Equals(tithe));
+        if(idx >= 0)
+            _tithes.RemoveAt(idx);
     }
 
     public void ChangeProfileData(string? firstName, string? lastName, string? phone)
     {
-        Info = Info.CopyWith(firstName, lastName, phone);
+        Info = BasicInfo.Create(
+            firstName?? Info.FirstName,
+            lastName ?? Info.LastName,
+            phone ?? Info.Phone);
+
         DateModified = DateTime.Now;
     }
 }
