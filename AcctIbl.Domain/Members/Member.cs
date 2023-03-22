@@ -25,7 +25,7 @@ public class Member : AggregateRoot<MemberId>
         _tithes.Add(tithe);
     }
 
-    public void UpdateAmountTithe(Tithe tithe, double newAmount)
+    public void UpdateAmountTithe(Tithe tithe, Amount newAmount)
     {
         var idx = _tithes.FindIndex(t => t.Equals(tithe));
 

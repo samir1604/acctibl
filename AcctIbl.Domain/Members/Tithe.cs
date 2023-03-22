@@ -1,11 +1,12 @@
-﻿using AcctIbl.Domain.SharedKernel;
+﻿using AcctIbl.Domain.Members.ValueObjects;
+using AcctIbl.Domain.SharedKernel;
 using AcctIbl.Domain.SharedKernel.Enums;
 
 namespace AcctIbl.Domain.Members;
 
 public sealed class Tithe : ValueObject
 {
-    private Tithe(Month month, double amount)
+    private Tithe(Month month, Amount amount)
     {
         Month = month;
         Amount = amount;
@@ -13,10 +14,10 @@ public sealed class Tithe : ValueObject
     }
 
     public Month Month {get; init; }
-    public double Amount {get; init; }
+    public Amount Amount {get; init; }
     public DateTime DateCreated { get; init; }
 
-    public static Tithe Create(Month month, double amount)
+    public static Tithe Create(Month month, Amount amount)
     {
         return new(month, amount);
     }
